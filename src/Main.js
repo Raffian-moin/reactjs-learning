@@ -1,37 +1,68 @@
 import React from 'react';
 import { useState } from "react";
+import { FaTrashAlt } from "react-icons/fa";
 
 function Main(props) {
-    const moin = "name";
-    const job = "rap";
+    const [items, setItems] = useState([
+        {
+            id: 1,
+            checked: false,
+            item: 'Banana',
+        },
+        {
+            id: 2,
+            checked: false,
+            item: 'Grape',
+        },
+        {
+            id: 3,
+            checked: true,
+            item: 'School Bag',
+        },
+    ])
 
-    const [name, setName] = useState();
-
-    const handleNameChange = () => {
-    const names = ["moin", "happy", "khushi"];
-    const int = Math.floor(Math.random() * 3);
-    return setName(names[int]);
-    };
-
-    const handleMessage = () => {
-        alert('hello');
+    const handleCheck = (id) => {
+      const  listItems = items.map((item) => 
+        item.id == id ? {...item, checked: !item.checked} : item
+      );
+      setItems(listItems);
     }
-    const handleMessage1 = (myname) => {
-      alert(myname);
-    };
+
+    const handleDelete = (id) => {
+      const listItems = items.filter((item) =>
+        item.id != id 
+      );
+      setItems(listItems);
+    }
+    const listItems = items.map((item) => (
+      <li className="item" key={item.id}>
+        <input
+          type="checkbox"
+          checked={item.checked}
+          onChange={() => {
+            handleCheck(item.id);
+          }}
+        />
+        <label
+          htmlFor=""
+          style={
+            item.checked == true ? { textDecoration: "line-through" } : null
+          }
+        >
+          {item.item}
+        </label>
+        <FaTrashAlt onClick={()=> {handleDelete(item.id);}} role="button" />
+      </li>
+    ));
     return (
       <div>
         <header>
-          <p>{name}</p>
-          {/* <p>{handleNameChange}</p> */}
-          <button onClick={handleNameChange}>Click Me!</button>
-          <button
-            onClick={() => {
-              handleMessage1("myname");
-            }}
-          >
-            Once More Click Me!
-          </button>
+          {items.length ? (
+          <ul>{listItems}</ul>
+          ) : (
+            <p>Your Item Empty</p>
+          )
+          }
         </header>
       </div>
     );
